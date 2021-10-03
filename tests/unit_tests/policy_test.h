@@ -1,5 +1,5 @@
 /**
- * @file        main.cpp
+ * @file        policy_test.h
  *
  * @author      Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
@@ -20,11 +20,30 @@
  *      limitations under the License.
  */
 
-#include <policy_test.h>
+#ifndef POLICY_TEST_H
+#define POLICY_TEST_H
 
-int main()
+#include <libKitsunemimiCommon/test_helper/compare_test_helper.h>
+
+namespace Kitsunemimi
 {
-    Kitsunemimi::Hanami::Policy_Test();
+namespace Hanami
+{
 
-    return 0;
+class Policy_Test
+        : public Kitsunemimi::CompareTestHelper
+{
+public:
+    Policy_Test();
+
+private:
+    void parse_test();
+    void checkUserAgainstPolicy();
+
+    const std::string getTestString();
+};
+
 }
+}
+
+#endif // POLICY_TEST_H

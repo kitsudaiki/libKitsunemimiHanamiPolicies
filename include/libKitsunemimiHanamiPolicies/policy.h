@@ -1,5 +1,5 @@
 /**
- * @file        main.cpp
+ * @file        policy.h
  *
  * @author      Tobias Anker <tobias.anker@kitsunemimi.moe>
  *
@@ -20,11 +20,39 @@
  *      limitations under the License.
  */
 
-#include <policy_test.h>
+#ifndef POLICY_H
+#define POLICY_H
 
-int main()
+#include <string>
+
+namespace Kitsunemimi
 {
-    Kitsunemimi::Hanami::Policy_Test();
+class DataMap;
+namespace Hanami
+{
+class Policy_Test;
 
-    return 0;
+class Policy
+{
+public:
+    Policy();
+    ~Policy();
+
+    bool parse(const std::string &input, std::string &errorMessage);
+
+    bool checkUserAgainstPolicy(const std::string &component,
+                                const std::string &endpoint,
+                                const std::string &group);
+
+private:
+    void clear();
+
+    DataMap* m_policyRules = nullptr;
+
+    friend Policy_Test;
+};
+
 }
+}
+
+#endif // POLICY_H
