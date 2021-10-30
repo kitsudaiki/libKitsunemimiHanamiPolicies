@@ -25,10 +25,13 @@
 
 #include <iostream>
 #include <mutex>
+#include <map>
+#include <string>
+#include <vector>
+#include <libKitsunemimiHanamiPolicies/policy.h>
 
 namespace Kitsunemimi
 {
-struct DataMap;
 namespace Hanami
 {
 class location;
@@ -43,11 +46,12 @@ public:
     // connection the the scanner and parser
     void scan_begin(const std::string &inputString);
     void scan_end();
-    DataMap* parse(const std::string &inputString, std::string &errorMessage);
+    bool parse(std::map<std::string, std::map<std::string, PolicyEntry>>* result,
+               const std::string &inputString,
+               std::string &errorMessage);
     const std::string removeQuotes(const std::string &input);
 
-    // output-handling
-    void setOutput(DataMap* output);
+    std::map<std::string, std::map<std::string, PolicyEntry>>* m_result = nullptr;
 
     // Error handling.
     void error(const location &location,
@@ -58,7 +62,6 @@ private:
 
     static PolicyParserInterface* m_instance;
 
-    DataMap* m_output = nullptr;
     std::string m_errorMessage = "";
     std::string m_inputString = "";
     std::mutex m_lock;

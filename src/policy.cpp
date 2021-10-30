@@ -38,10 +38,7 @@ Policy::Policy() {}
 /**
  * @brief Policy::~Policy
  */
-Policy::~Policy()
-{
-    clear();
-}
+Policy::~Policy() {}
 
 /**
  * @brief parse policy-file content
@@ -55,26 +52,12 @@ bool
 Policy::parse(const std::string &input,
               std::string &errorMessage)
 {
-    PolicyParserInterface* parser = PolicyParserInterface::getInstance();
-
-    // parse ini-template into a json-tree
-    DataMap* result = nullptr;
-    if(input.size() > 0) {
-        result = parser->parse(input, errorMessage);
-    } else {
-        result = new DataMap();
-    }
-
-    // process a failure
-    if(result == nullptr) {
+    if(input.size() == 0) {
         return false;
     }
 
-    clear();
-
-    m_policyRules = result;
-
-    return true;
+    PolicyParserInterface* parser = PolicyParserInterface::getInstance();
+    return parser->parse(&m_policyRules, input, errorMessage);
 }
 
 /**
@@ -82,6 +65,7 @@ Policy::parse(const std::string &input,
  *
  * @param component name of the requested component
  * @param endpoint requested endpoint of the component
+ * @param type http-request-type
  * @param group group which has to be checked
  *
  * @return true, if check was successfully, else false
@@ -89,28 +73,19 @@ Policy::parse(const std::string &input,
 bool
 Policy::checkUserAgainstPolicy(const std::string &component,
                                const std::string &endpoint,
+                               const HttpType type,
                                const std::string &group)
 {
-    DataItem* item = nullptr;
+    std::map<std::string, std::map<std::string, PolicyEntry>>::const_iterator component_it;
+    component_it = m_policyRules.find(component);
 
-    // check component
-    item = m_policyRules->get(component);
-    if(item == nullptr) {
-        return false;
-    }
-
-    // check endpoint within component
-    item = item->get(endpoint);
-    if(item == nullptr) {
-        return false;
-    }
-
-    // check group
-    std::vector<DataItem*>* userList = &item->toArray()->m_array;
-    for(uint32_t i = 0; i < userList->size(); i++)
+    if(component_it != m_policyRules.end())
     {
-        if(group == std::string(userList->at(i)->toValue()->m_content.stringValue)) {
-            return true;
+        std::map<std::string, PolicyEntry>::const_iterator endpoint_it;
+        endpoint_it = component_it->second.find(endpoint);
+
+        if(endpoint_it != component_it->second.end()) {
+            return checkEntry(endpoint_it->second,  type, group);
         }
     }
 
@@ -118,16 +93,54 @@ Policy::checkUserAgainstPolicy(const std::string &component,
 }
 
 /**
- * @brief clear data, which are hold by this object
+ * @brief Policy::checkEntry
+ * @param entry
+ * @param type
+ * @param group
+ * @return
  */
-void
-Policy::clear()
+bool
+Policy::checkEntry(const PolicyEntry &entry,
+                   const HttpType type,
+                   const std::string &group)
 {
-    if(m_policyRules != nullptr)
+    switch(type)
     {
-        delete m_policyRules;
-        m_policyRules = nullptr;
+        case GET_TYPE:
+            return checkRuleList(entry.getRules, group);
+            break;
+        case POST_TYPE:
+            return checkRuleList(entry.postRules, group);
+            break;
+        case PUT_TYPE:
+            return checkRuleList(entry.putRules, group);
+            break;
+        case DELETE_TYPE:
+            return checkRuleList(entry.deleteRules, group);
+            break;
     }
+
+    return false;
+}
+
+/**
+ * @brief Policy::checkRuleList
+ * @param rules
+ * @param group
+ * @return
+ */
+bool
+Policy::checkRuleList(const std::vector<std::string> &rules,
+                      const std::string &group)
+{
+    for(const std::string& rule : rules)
+    {
+        if(rule == group) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }

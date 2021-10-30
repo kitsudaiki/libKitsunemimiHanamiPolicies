@@ -36,13 +36,10 @@
 %code requires
 {
 #include <string>
+#include <map>
+#include <vector>
 #include <iostream>
-#include <libKitsunemimiCommon/common_items/data_items.h>
-
-using Kitsunemimi::DataItem;
-using Kitsunemimi::DataArray;
-using Kitsunemimi::DataValue;
-using Kitsunemimi::DataMap;
+#include <libKitsunemimiHanamiCommon/enums.h>
 
 namespace Kitsunemimi
 {
@@ -63,27 +60,37 @@ class PolicyParserInterface;
 %code
 {
 #include <policy_parsing/policy_parser_interface.h>
+#include <libKitsunemimiHanamiPolicies/policy.h>
+
 # undef YY_DECL
 # define YY_DECL \
     Kitsunemimi::Hanami::PolicyParser::symbol_type policylex (Kitsunemimi::Hanami::PolicyParserInterface& driver)
 YY_DECL;
+
+std::map<std::string, Kitsunemimi::Hanami::PolicyEntry> tempPolicy;
+Kitsunemimi::Hanami::PolicyEntry tempPolicyEntry;
+std::vector<std::string> tempRules;
 }
 
 // Token
 %define api.token.prefix {Policy_}
 %token
     END  0  "end of file"
-    DELIMITER  "---"
+    BRAKET_OPEN  "["
+    BRAKET_CLOSE "]"
     MINUS  "-"
     COMMA  ","
     ASSIGN  ":"
+    GET  "GET"
+    PUT  "PUT"
+    POST  "POST"
+    DELETE  "DELETE"
 ;
 
 %token <std::string> IDENTIFIER "identifier"
+%token <std::string> PATH "path"
 
-%type  <DataMap*> policy_content
-%type  <DataMap*> policy_object_content
-%type  <DataArray*> rule_list
+%type  <HttpType> request_type
 
 %%
 %start startpoint;
@@ -92,46 +99,101 @@ YY_DECL;
 startpoint:
     policy_content
     {
-        driver.setOutput($1);
     }
 
 policy_content:
-    policy_content "---" "identifier" policy_object_content
+    policy_content "[" "identifier" "]" component_policy_content
     {
-        $1->insert($3, $4);
-        $$ = $1;
+        driver.m_result->insert(std::make_pair($3, tempPolicy));
     }
 |
-    "identifier" policy_object_content
+    "[" "identifier" "]" component_policy_content
     {
-        $$ = new DataMap();
-        $$->insert($1, $2);
+        driver.m_result->clear();
+        driver.m_result->insert(std::make_pair($2, tempPolicy));
     }
 
-policy_object_content:
-    policy_object_content "-" "identifier" ":" rule_list
+component_policy_content:
+    component_policy_content "identifier" policy_entry
     {
-        $1->insert($3, $5);
-        $$ = $1;
+        tempPolicy.insert(std::make_pair($2, tempPolicyEntry));
     }
 |
-    "-" "identifier" ":" rule_list
+    "identifier" policy_entry
     {
-        $$ = new DataMap();
-        $$->insert($2, $4);
+        tempPolicy.clear();
+        tempPolicy.insert(std::make_pair($1, tempPolicyEntry));
+    }
+
+policy_entry:
+    policy_entry "-" request_type ":" rule_list
+    {
+        if($3 == HttpType::GET_TYPE) {
+            tempPolicyEntry.getRules = tempRules;
+        }
+        if($3 == HttpType::POST_TYPE) {
+            tempPolicyEntry.postRules = tempRules;
+        }
+        if($3 == HttpType::PUT_TYPE) {
+            tempPolicyEntry.putRules = tempRules;
+        }
+        if($3 == HttpType::DELETE_TYPE) {
+            tempPolicyEntry.deleteRules = tempRules;
+        }
+    }
+|
+    "-" request_type ":" rule_list
+    {
+        tempPolicyEntry.getRules.clear();
+        tempPolicyEntry.postRules.clear();
+        tempPolicyEntry.putRules.clear();
+        tempPolicyEntry.deleteRules.clear();
+
+        if($2 == HttpType::GET_TYPE) {
+            tempPolicyEntry.getRules = tempRules;
+        }
+        if($2 == HttpType::POST_TYPE) {
+            tempPolicyEntry.postRules = tempRules;
+        }
+        if($2 == HttpType::PUT_TYPE) {
+            tempPolicyEntry.putRules = tempRules;
+        }
+        if($2 == HttpType::DELETE_TYPE) {
+            tempPolicyEntry.deleteRules = tempRules;
+        }
     }
 
 rule_list:
     rule_list "," "identifier"
     {
-        $1->append(new DataValue($3));
-        $$ = $1;
+        tempRules.push_back($3);
     }
 |
     "identifier"
     {
-        $$ = new DataArray();
-        $$->append(new DataValue($1));
+        tempRules.clear();
+        tempRules.push_back($1);
+    }
+
+request_type:
+    "GET"
+    {
+        $$ = HttpType::GET_TYPE;
+    }
+|
+    "POST"
+    {
+        $$ = HttpType::POST_TYPE;
+    }
+|
+    "PUT"
+    {
+        $$ = HttpType::PUT_TYPE;
+    }
+|
+    "DELETE"
+    {
+        $$ = HttpType::DELETE_TYPE;
     }
 
 %%

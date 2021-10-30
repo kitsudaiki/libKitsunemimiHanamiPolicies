@@ -24,6 +24,9 @@
 #define POLICY_H
 
 #include <string>
+#include <map>
+#include <vector>
+#include <libKitsunemimiHanamiCommon/enums.h>
 
 namespace Kitsunemimi
 {
@@ -31,6 +34,14 @@ class DataMap;
 namespace Hanami
 {
 class Policy_Test;
+
+struct PolicyEntry
+{
+    std::vector<std::string> getRules;
+    std::vector<std::string> postRules;
+    std::vector<std::string> putRules;
+    std::vector<std::string> deleteRules;
+};
 
 class Policy
 {
@@ -42,12 +53,17 @@ public:
 
     bool checkUserAgainstPolicy(const std::string &component,
                                 const std::string &endpoint,
+                                const HttpType type,
                                 const std::string &group);
 
 private:
-    void clear();
+    std::map<std::string, std::map<std::string, PolicyEntry>> m_policyRules;
 
-    DataMap* m_policyRules = nullptr;
+    bool checkEntry(const PolicyEntry &entry,
+                    const HttpType type,
+                    const std::string &group);
+    bool checkRuleList(const std::vector<std::string> &rules,
+                       const std::string &group);
 
     friend Policy_Test;
 };

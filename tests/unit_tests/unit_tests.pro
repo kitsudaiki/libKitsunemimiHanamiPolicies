@@ -12,6 +12,11 @@ LIBS += -L../../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
 LIBS += -L../../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
 INCLUDEPATH += ../../../libKitsunemimiCommon/include
 
+LIBS += -L../../../libKitsunemimiHanamiCommon/src -lKitsunemimiHanamiCommon
+LIBS += -L../../../libKitsunemimiHanamiCommon/src/debug -lKitsunemimiHanamiCommon
+LIBS += -L../../../libKitsunemimiHanamiCommon/src/release -lKitsunemimiHanamiCommon
+INCLUDEPATH += ../../../libKitsunemimiHanamiCommon/include
+
 INCLUDEPATH += $$PWD
 
 SOURCES += \

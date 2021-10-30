@@ -24,12 +24,6 @@
 #include <policy_parser.h>
 
 #include <libKitsunemimiCommon/common_methods/string_methods.h>
-#include <libKitsunemimiCommon/common_items/data_items.h>
-
-using Kitsunemimi::DataItem;
-using Kitsunemimi::DataArray;
-using Kitsunemimi::DataValue;
-using Kitsunemimi::DataMap;
 
 # define YY_DECL \
     Kitsunemimi::Hanami::PolicyParser::symbol_type policylex (Kitsunemimi::Hanami::PolicyParserInterface& driver)
@@ -76,9 +70,6 @@ PolicyParserInterface::getInstance()
  */
 PolicyParserInterface::~PolicyParserInterface()
 {
-    if(m_output != nullptr) {
-        delete m_output;
-    }
 }
 
 /**
@@ -89,18 +80,17 @@ PolicyParserInterface::~PolicyParserInterface()
  *
  * @return resulting object
  */
-DataMap*
-PolicyParserInterface::parse(const std::string &inputString,
+bool
+PolicyParserInterface::parse(std::map<std::string, std::map<std::string, PolicyEntry>>* result,
+                             const std::string &inputString,
                              std::string &errorMessage)
 {
-    DataMap* result = nullptr;
-
     m_lock.lock();
 
     // init global values
     m_inputString = inputString;
     m_errorMessage = "";
-    m_output = nullptr;
+    m_result = result;
 
     // run parser-code
     this->scan_begin(inputString);
@@ -113,15 +103,12 @@ PolicyParserInterface::parse(const std::string &inputString,
     {
         errorMessage = m_errorMessage;
         m_lock.unlock();
-        return nullptr;
+        return false;
     }
-
-    result = m_output;
-    m_output = nullptr;
 
     m_lock.unlock();
 
-    return result;
+    return true;
 }
 
 /**
@@ -152,17 +139,6 @@ PolicyParserInterface::removeQuotes(const std::string &input)
     }
 
     return input;
-}
-
-/**
- * @brief Is called for the parser after successfully parsing the input-string
- *
- * @param output parser-output as data-item
- */
-void
-PolicyParserInterface::setOutput(DataMap* output)
-{
-     m_output = output;
 }
 
 /**

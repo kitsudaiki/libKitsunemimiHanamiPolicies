@@ -46,6 +46,7 @@ Kitsunemimi::Hanami::location policyloc;
 
 %option noyywrap nounput batch debug yylineno prefix="policy"
 
+path  [a-zA-Z_0-9\/\-_]*
 id    [a-zA-Z_0-9]*
 long  -?([0-9]+)
 blank [ \t]
@@ -62,12 +63,18 @@ blank [ \t]
 
 {blank}+  policyloc.step();
 [\n]      {policyloc.lines(1); policyloc.step(); }
-"---"     return Kitsunemimi::Hanami::PolicyParser::make_DELIMITER (policyloc);
+"["       return Kitsunemimi::Hanami::PolicyParser::make_BRAKET_OPEN (policyloc);
+"]"       return Kitsunemimi::Hanami::PolicyParser::make_BRAKET_CLOSE (policyloc);
 "-"       return Kitsunemimi::Hanami::PolicyParser::make_MINUS (policyloc);
 ","       return Kitsunemimi::Hanami::PolicyParser::make_COMMA (policyloc);
 ":"       return Kitsunemimi::Hanami::PolicyParser::make_ASSIGN (policyloc);
+"GET"     return Kitsunemimi::Hanami::PolicyParser::make_GET (policyloc);
+"PUT"     return Kitsunemimi::Hanami::PolicyParser::make_PUT (policyloc);
+"POST"    return Kitsunemimi::Hanami::PolicyParser::make_POST (policyloc);
+"DELETE"  return Kitsunemimi::Hanami::PolicyParser::make_DELETE (policyloc);
 
-{id}       return Kitsunemimi::Hanami::PolicyParser::make_IDENTIFIER(yytext, policyloc);
+{id}      return Kitsunemimi::Hanami::PolicyParser::make_IDENTIFIER(yytext, policyloc);
+{path}    return Kitsunemimi::Hanami::PolicyParser::make_PATH(yytext, policyloc);
 
 .          driver.error(policyloc, "invalid character");
 <<EOF>>    return Kitsunemimi::Hanami::PolicyParser::make_END(policyloc);

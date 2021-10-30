@@ -48,7 +48,6 @@ Policy_Test::parse_test()
     std::string errorMessage = "";
 
     TEST_EQUAL(policy.parse(testInput, errorMessage), true);
-    TEST_EQUAL(policy.m_policyRules->size(), 2);
 }
 
 /**
@@ -62,10 +61,10 @@ Policy_Test::checkUserAgainstPolicy()
     std::string errorMessage = "";
     policy.parse(testInput, errorMessage);
 
-    TEST_EQUAL(policy.checkUserAgainstPolicy("bogus",      "get_status", "user1"), false);
-    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "bogus",      "user1"), false);
-    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "get_status", "bogus"), false);
-    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "get_status", "user1"), true);
+    TEST_EQUAL(policy.checkUserAgainstPolicy("bogus",      "get_status", GET_TYPE, "user1"), false);
+    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "bogus",      GET_TYPE, "user1"), false);
+    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "get_status", GET_TYPE, "bogus"), false);
+    TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "get_status", GET_TYPE, "user1"), true);
 }
 
 /**
@@ -74,12 +73,16 @@ Policy_Test::checkUserAgainstPolicy()
 const std::string
 Policy_Test::getTestString()
 {
-    const std::string testString = "component1\n"
-                                   "- get_cluster: user1\n"
-                                   "- create_cluster: user2\n"
-                                   "---\n"
-                                   "component2\n"
-                                   "- get_status: user1, user2\n";
+    const std::string testString = "[component1]\n"
+                                   "get_cluster\n"
+                                   "- GET: user1\n"
+                                   "create_cluster \n"
+                                   "- GET: user1\n"
+                                   "- POST: user2\n"
+                                   "\n"
+                                   "[component2]\n"
+                                   "get_status \n"
+                                   "- GET: user1, user2\n";
     return testString;
 }
 
