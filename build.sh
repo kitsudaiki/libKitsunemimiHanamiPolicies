@@ -53,8 +53,8 @@ function get_required_private_repo_gitlab () {
     REPO_NAME=$1
     TAG_OR_BRANCH=$2
     TOKEN=$3
-    ADDITIONAL_CONFIGS=$4
-    NUMBER_OF_THREADS=$5
+    NUMBER_OF_THREADS=$4
+    ADDITIONAL_CONFIGS=$5
 
     # clone repo
     git clone http://kitsudaiki:$TOKEN@10.0.3.120/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
@@ -80,7 +80,14 @@ function get_required_private_repo_github () {
 
 #-----------------------------------------------------------------------------------------------------------------
 
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.18.0" 4 "staticlib"
+echo "###########################################################################################################"
+echo ""
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.22.0" 4 "staticlib"
+echo "###########################################################################################################"
+echo ""
+get_required_private_repo_gitlab "libKitsunemimiHanamiCommon" "master" "2ue6RNxkCDs2A7qp1xtN" 4 "staticlib"
+echo ""
+echo "###########################################################################################################"
 
 #-----------------------------------------------------------------------------------------------------------------
 
@@ -91,4 +98,3 @@ else
 fi
 
 #-----------------------------------------------------------------------------------------------------------------
-
