@@ -48,6 +48,7 @@ Policy_Test::parse_test()
     std::string errorMessage = "";
 
     TEST_EQUAL(policy.parse(testInput, errorMessage), true);
+    std::cout<<errorMessage<<std::endl;
 }
 
 /**
@@ -74,9 +75,9 @@ const std::string
 Policy_Test::getTestString()
 {
     const std::string testString = "[component1]\n"
-                                   "get_cluster\n"
+                                   "test/get_cluster\n"
                                    "- GET: user1\n"
-                                   "create_cluster \n"
+                                   "test/create_cluster \n"
                                    "- GET: user1\n"
                                    "- POST: user2\n"
                                    "\n"

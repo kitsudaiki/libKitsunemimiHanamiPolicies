@@ -91,15 +91,10 @@ std::vector<std::string> tempRules;
 %token <std::string> PATH "path"
 
 %type  <HttpType> request_type
+%type  <std::string> endpoint;
 
 %%
-%start startpoint;
-
-
-startpoint:
-    policy_content
-    {
-    }
+%start policy_content;
 
 policy_content:
     policy_content "[" "identifier" "]" component_policy_content
@@ -114,12 +109,12 @@ policy_content:
     }
 
 component_policy_content:
-    component_policy_content "identifier" policy_entry
+    component_policy_content endpoint policy_entry
     {
         tempPolicy.insert(std::make_pair($2, tempPolicyEntry));
     }
 |
-    "identifier" policy_entry
+    endpoint policy_entry
     {
         tempPolicy.clear();
         tempPolicy.insert(std::make_pair($1, tempPolicyEntry));
@@ -173,6 +168,18 @@ rule_list:
     {
         tempRules.clear();
         tempRules.push_back($1);
+    }
+
+
+endpoint:
+    "path"
+    {
+        $$ = $1;
+    }
+|
+    "identifier"
+    {
+        $$ = $1;
     }
 
 request_type:
