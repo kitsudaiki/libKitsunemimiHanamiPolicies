@@ -73,7 +73,7 @@ Policy::parse(const std::string &input,
 bool
 Policy::checkUserAgainstPolicy(const std::string &component,
                                const std::string &endpoint,
-                               const HttpType type,
+                               const HttpRequestType type,
                                const std::string &group)
 {
     std::map<std::string, std::map<std::string, PolicyEntry>>::const_iterator component_it;
@@ -101,7 +101,7 @@ Policy::checkUserAgainstPolicy(const std::string &component,
  */
 bool
 Policy::checkEntry(const PolicyEntry &entry,
-                   const HttpType type,
+                   const HttpRequestType type,
                    const std::string &group)
 {
     switch(type)

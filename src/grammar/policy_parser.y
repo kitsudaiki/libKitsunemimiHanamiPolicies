@@ -90,7 +90,7 @@ std::vector<std::string> tempRules;
 %token <std::string> IDENTIFIER "identifier"
 %token <std::string> PATH "path"
 
-%type  <HttpType> request_type
+%type  <Kitsunemimi::Hanami::HttpRequestType> request_type
 %type  <std::string> endpoint;
 
 %%
@@ -123,16 +123,16 @@ component_policy_content:
 policy_entry:
     policy_entry "-" request_type ":" rule_list
     {
-        if($3 == HttpType::GET_TYPE) {
+        if($3 == Kitsunemimi::Hanami::HttpRequestType::GET_TYPE) {
             tempPolicyEntry.getRules = tempRules;
         }
-        if($3 == HttpType::POST_TYPE) {
+        if($3 == Kitsunemimi::Hanami::HttpRequestType::POST_TYPE) {
             tempPolicyEntry.postRules = tempRules;
         }
-        if($3 == HttpType::PUT_TYPE) {
+        if($3 == Kitsunemimi::Hanami::HttpRequestType::PUT_TYPE) {
             tempPolicyEntry.putRules = tempRules;
         }
-        if($3 == HttpType::DELETE_TYPE) {
+        if($3 == Kitsunemimi::Hanami::HttpRequestType::DELETE_TYPE) {
             tempPolicyEntry.deleteRules = tempRules;
         }
     }
@@ -144,16 +144,16 @@ policy_entry:
         tempPolicyEntry.putRules.clear();
         tempPolicyEntry.deleteRules.clear();
 
-        if($2 == HttpType::GET_TYPE) {
+        if($2 == Kitsunemimi::Hanami::HttpRequestType::GET_TYPE) {
             tempPolicyEntry.getRules = tempRules;
         }
-        if($2 == HttpType::POST_TYPE) {
+        if($2 == Kitsunemimi::Hanami::HttpRequestType::POST_TYPE) {
             tempPolicyEntry.postRules = tempRules;
         }
-        if($2 == HttpType::PUT_TYPE) {
+        if($2 == Kitsunemimi::Hanami::HttpRequestType::PUT_TYPE) {
             tempPolicyEntry.putRules = tempRules;
         }
-        if($2 == HttpType::DELETE_TYPE) {
+        if($2 == Kitsunemimi::Hanami::HttpRequestType::DELETE_TYPE) {
             tempPolicyEntry.deleteRules = tempRules;
         }
     }
@@ -185,22 +185,22 @@ endpoint:
 request_type:
     "GET"
     {
-        $$ = HttpType::GET_TYPE;
+        $$ = Kitsunemimi::Hanami::HttpRequestType::GET_TYPE;
     }
 |
     "POST"
     {
-        $$ = HttpType::POST_TYPE;
+        $$ = Kitsunemimi::Hanami::HttpRequestType::POST_TYPE;
     }
 |
     "PUT"
     {
-        $$ = HttpType::PUT_TYPE;
+        $$ = Kitsunemimi::Hanami::HttpRequestType::PUT_TYPE;
     }
 |
     "DELETE"
     {
-        $$ = HttpType::DELETE_TYPE;
+        $$ = Kitsunemimi::Hanami::HttpRequestType::DELETE_TYPE;
     }
 
 %%
