@@ -5,15 +5,25 @@ TEMPLATE = lib
 CONFIG += c++17
 VERSION = 0.1.0
 
-LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
-LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
-LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
-INCLUDEPATH += ../../libKitsunemimiCommon/include
-
 LIBS += -L../../libKitsunemimiHanamiCommon/src -lKitsunemimiHanamiCommon
 LIBS += -L../../libKitsunemimiHanamiCommon/src/debug -lKitsunemimiHanamiCommon
 LIBS += -L../../libKitsunemimiHanamiCommon/src/release -lKitsunemimiHanamiCommon
 INCLUDEPATH += ../../libKitsunemimiHanamiCommon/include
+
+LIBS += -L../../libKitsunemimiArgs/src -lKitsunemimiArgs
+LIBS += -L../../libKitsunemimiArgs/src/debug -lKitsunemimiArgs
+LIBS += -L../../libKitsunemimiArgs/src/release -lKitsunemimiArgs
+INCLUDEPATH += ../../libKitsunemimiArgs/include
+
+LIBS += -L../../libKitsunemimiConfig/src -lKitsunemimiConfig
+LIBS += -L../../libKitsunemimiConfig/src/debug -lKitsunemimiConfig
+LIBS += -L../../libKitsunemimiConfig/src/release -lKitsunemimiConfig
+INCLUDEPATH += ../../libKitsunemimiConfig/include
+
+LIBS += -L../../libKitsunemimiCommon/src -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/debug -lKitsunemimiCommon
+LIBS += -L../../libKitsunemimiCommon/src/release -lKitsunemimiCommon
+INCLUDEPATH += ../../libKitsunemimiCommon/include
 
 INCLUDEPATH += $$PWD \
                $$PWD/../include

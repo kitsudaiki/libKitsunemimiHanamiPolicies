@@ -118,6 +118,10 @@ Policy::checkEntry(const PolicyEntry &entry,
         case DELETE_TYPE:
             return checkRuleList(entry.deleteRules, group);
             break;
+        case HEAD_TYPE:
+            break;
+        case UNKNOWN_HTTP_TYPE:
+            break;
     }
 
     return false;
