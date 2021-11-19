@@ -77,15 +77,16 @@ PolicyParserInterface::~PolicyParserInterface()
  *
  * @param inputString string which should be parsed
  * @param reference for error-message
+ * @param error reference for error-output
  *
  * @return resulting object
  */
 bool
 PolicyParserInterface::parse(std::map<std::string, std::map<std::string, PolicyEntry>>* result,
                              const std::string &inputString,
-                             std::string &errorMessage)
+                             ErrorContainer &error)
 {
-    m_lock.lock();
+    std::lock_guard<std::mutex> guard(m_lock);
 
     // init global values
     m_inputString = inputString;
@@ -101,12 +102,9 @@ PolicyParserInterface::parse(std::map<std::string, std::map<std::string, PolicyE
     // handle negative result
     if(res != 0)
     {
-        errorMessage = m_errorMessage;
-        m_lock.unlock();
+        error.addMeesage(m_errorMessage);
         return false;
     }
-
-    m_lock.unlock();
 
     return true;
 }

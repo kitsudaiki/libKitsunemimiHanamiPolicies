@@ -27,6 +27,7 @@
 #include <map>
 #include <vector>
 #include <libKitsunemimiHanamiCommon/enums.h>
+#include <libKitsunemimiCommon/logger.h>
 
 namespace Kitsunemimi
 {
@@ -49,7 +50,7 @@ public:
     Policy();
     ~Policy();
 
-    bool parse(const std::string &input, std::string &errorMessage);
+    bool parse(const std::string &input, ErrorContainer &error);
 
     bool checkUserAgainstPolicy(const std::string &component,
                                 const std::string &endpoint,

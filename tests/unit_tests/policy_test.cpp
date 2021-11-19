@@ -45,10 +45,9 @@ Policy_Test::parse_test()
 {
     const std::string testInput = getTestString();
     Kitsunemimi::Hanami::Policy policy;
-    std::string errorMessage = "";
+    ErrorContainer error;
 
-    TEST_EQUAL(policy.parse(testInput, errorMessage), true);
-    std::cout<<errorMessage<<std::endl;
+    TEST_EQUAL(policy.parse(testInput, error), true);
 }
 
 /**
@@ -59,8 +58,8 @@ Policy_Test::checkUserAgainstPolicy()
 {
     const std::string testInput = getTestString();
     Kitsunemimi::Hanami::Policy policy;
-    std::string errorMessage = "";
-    policy.parse(testInput, errorMessage);
+    ErrorContainer error;
+    policy.parse(testInput, error);
 
     TEST_EQUAL(policy.checkUserAgainstPolicy("bogus",      "get_status", GET_TYPE, "user1"), false);
     TEST_EQUAL(policy.checkUserAgainstPolicy("component2", "bogus",      GET_TYPE, "user1"), false);

@@ -44,20 +44,20 @@ Policy::~Policy() {}
  * @brief parse policy-file content
  *
  * @param input input-string with policy-definition to parse
- * @param errorMessage reference for the output of the error-message
+ * @param error reference for error-output
  *
  * @return true, if parsing was successfull, else false
  */
 bool
 Policy::parse(const std::string &input,
-              std::string &errorMessage)
+              ErrorContainer &error)
 {
     if(input.size() == 0) {
         return false;
     }
 
     PolicyParserInterface* parser = PolicyParserInterface::getInstance();
-    return parser->parse(&m_policyRules, input, errorMessage);
+    return parser->parse(&m_policyRules, input, error);
 }
 
 /**

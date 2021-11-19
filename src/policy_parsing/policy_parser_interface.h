@@ -48,7 +48,7 @@ public:
     void scan_end();
     bool parse(std::map<std::string, std::map<std::string, PolicyEntry>>* result,
                const std::string &inputString,
-               std::string &errorMessage);
+               ErrorContainer &error);
     const std::string removeQuotes(const std::string &input);
 
     std::map<std::string, std::map<std::string, PolicyEntry>>* m_result = nullptr;
