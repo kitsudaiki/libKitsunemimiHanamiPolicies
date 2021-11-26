@@ -43,7 +43,7 @@ private:
     const std::string getTestString();
 };
 
-}
-}
+}  // namespace Hanami
+}  // namespace Kitsunemimi
 
 #endif // POLICY_TEST_H

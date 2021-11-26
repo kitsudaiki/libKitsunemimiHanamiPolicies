@@ -66,7 +66,7 @@ Policy::parse(const std::string &input,
  * @param component name of the requested component
  * @param endpoint requested endpoint of the component
  * @param type http-request-type
- * @param group group which has to be checked
+ * @param role role which has to be checked
  *
  * @return true, if check was successfully, else false
  */
@@ -74,7 +74,7 @@ bool
 Policy::checkUserAgainstPolicy(const std::string &component,
                                const std::string &endpoint,
                                const HttpRequestType type,
-                               const std::string &group)
+                               const std::string &role)
 {
     std::map<std::string, std::map<std::string, PolicyEntry>>::const_iterator component_it;
     component_it = m_policyRules.find(component);
@@ -85,7 +85,7 @@ Policy::checkUserAgainstPolicy(const std::string &component,
         endpoint_it = component_it->second.find(endpoint);
 
         if(endpoint_it != component_it->second.end()) {
-            return checkEntry(endpoint_it->second,  type, group);
+            return checkEntry(endpoint_it->second,  type, role);
         }
     }
 
@@ -93,30 +93,32 @@ Policy::checkUserAgainstPolicy(const std::string &component,
 }
 
 /**
- * @brief Policy::checkEntry
- * @param entry
- * @param type
- * @param group
- * @return
+ * @brief check role against policy-set for a specific endpoint
+ *
+ * @param entry policy-entry with all predefined rules of a specific endpoint
+ * @param type http-request-type
+ * @param role role which has to be checked
+ *
+ * @return true, if a rule in the entry match the role of the user
  */
 bool
 Policy::checkEntry(const PolicyEntry &entry,
                    const HttpRequestType type,
-                   const std::string &group)
+                   const std::string &role)
 {
     switch(type)
     {
         case GET_TYPE:
-            return checkRuleList(entry.getRules, group);
+            return checkRuleList(entry.getRules, role);
             break;
         case POST_TYPE:
-            return checkRuleList(entry.postRules, group);
+            return checkRuleList(entry.postRules, role);
             break;
         case PUT_TYPE:
-            return checkRuleList(entry.putRules, group);
+            return checkRuleList(entry.putRules, role);
             break;
         case DELETE_TYPE:
-            return checkRuleList(entry.deleteRules, group);
+            return checkRuleList(entry.deleteRules, role);
             break;
         case HEAD_TYPE:
             break;
@@ -128,18 +130,20 @@ Policy::checkEntry(const PolicyEntry &entry,
 }
 
 /**
- * @brief Policy::checkRuleList
- * @param rules
- * @param group
- * @return
+ * @brief check against the role-list
+ *
+ * @param rules list of rules of the requested endpoint
+ * @param role role which has to be checked
+ *
+ * @return true, if user-role is in the list of rules, else false
  */
 bool
 Policy::checkRuleList(const std::vector<std::string> &rules,
-                      const std::string &group)
+                      const std::string &role)
 {
-    for(const std::string& rule : rules)
+    for(const std::string& r : rules)
     {
-        if(rule == group) {
+        if(r == role) {
             return true;
         }
     }
@@ -147,5 +151,5 @@ Policy::checkRuleList(const std::vector<std::string> &rules,
     return false;
 }
 
-}
-}
+}  // namespace Hanami
+}  // namespace Kitsunemimi

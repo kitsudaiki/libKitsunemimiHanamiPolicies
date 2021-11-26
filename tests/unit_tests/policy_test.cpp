@@ -86,5 +86,5 @@ Policy_Test::getTestString()
     return testString;
 }
 
-}
-}
+}  // namespace Hanami
+}  // namespace Kitsunemimi

@@ -183,5 +183,5 @@ PolicyParserInterface::error(const Kitsunemimi::Hanami::location& location,
     }
 }
 
-}  // namespace Policy
+}  // namespace Hanami
 }  // namespace Kitsunemimi

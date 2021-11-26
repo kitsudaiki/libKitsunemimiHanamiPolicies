@@ -55,16 +55,16 @@ public:
     bool checkUserAgainstPolicy(const std::string &component,
                                 const std::string &endpoint,
                                 const HttpRequestType type,
-                                const std::string &group);
+                                const std::string &role);
 
 private:
     std::map<std::string, std::map<std::string, PolicyEntry>> m_policyRules;
 
     bool checkEntry(const PolicyEntry &entry,
                     const HttpRequestType type,
-                    const std::string &group);
+                    const std::string &role);
     bool checkRuleList(const std::vector<std::string> &rules,
-                       const std::string &group);
+                       const std::string &compare);
 
     friend Policy_Test;
 };
