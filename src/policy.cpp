@@ -46,7 +46,7 @@ Policy::~Policy() {}
  * @param input input-string with policy-definition to parse
  * @param error reference for error-output
  *
- * @return true, if parsing was successfull, else false
+ * @return true, if parsing was successful, else false
  */
 bool
 Policy::parse(const std::string &input,
