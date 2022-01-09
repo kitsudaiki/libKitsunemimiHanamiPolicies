@@ -82,7 +82,7 @@ function get_required_private_repo_github () {
 
 echo "###########################################################################################################"
 echo ""
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.24.0" 4 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.25.1" 4 "staticlib"
 get_required_kitsune_lib_repo "libKitsunemimiIni" "v0.5.1" 4 "staticlib"
 get_required_kitsune_lib_repo "libKitsunemimiArgs" "v0.4.0" 4 "staticlib"
 get_required_kitsune_lib_repo "libKitsunemimiConfig" "v0.4.0" 4 "staticlib"
