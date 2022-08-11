@@ -56,7 +56,7 @@ function get_required_private_repo_github () {
     ADDITIONAL_CONFIGS=$4
 
     # clone repo
-    git clone https://kitsudaiki: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@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
+    git clone https://kitsudaiki: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@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
     cd "$PARENT_DIR/$REPO_NAME"
     git checkout $TAG_OR_BRANCH
 
@@ -67,14 +67,14 @@ function get_required_private_repo_github () {
 
 echo "###########################################################################################################"
 echo ""
-get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.25.1" 4 "staticlib"
-get_required_kitsune_lib_repo "libKitsunemimiIni" "v0.5.1" 1 "staticlib"
-get_required_kitsune_lib_repo "libKitsunemimiArgs" "v0.4.0" 4 "staticlib"
-get_required_kitsune_lib_repo "libKitsunemimiConfig" "v0.4.0" 4 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiCommon" "v0.27.0" 8 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiIni" "develop" 1 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiArgs" "develop" 8 "staticlib"
+get_required_kitsune_lib_repo "libKitsunemimiConfig" "develop" 8 "staticlib"
 echo ""
 echo "###########################################################################################################"
 echo ""
-get_required_private_repo_github "libKitsunemimiHanamiCommon" "v0.1.0" 4 "staticlib"
+get_required_private_repo_github "libKitsunemimiHanamiCommon" "develop" 4 "staticlib"
 echo ""
 echo "###########################################################################################################"
 

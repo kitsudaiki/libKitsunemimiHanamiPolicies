@@ -23,7 +23,7 @@
 #include <policy_parsing/policy_parser_interface.h>
 #include <policy_parser.h>
 
-#include <libKitsunemimiCommon/common_methods/string_methods.h>
+#include <libKitsunemimiCommon/methods/string_methods.h>
 
 # define YY_DECL \
     Kitsunemimi::Hanami::PolicyParser::symbol_type policylex (Kitsunemimi::Hanami::PolicyParserInterface& driver)
