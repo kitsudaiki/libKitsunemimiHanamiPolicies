@@ -14,7 +14,11 @@ jobs:
         run: ls -l ./
       - name: "update package-list"
         run: apt-get update
+      - name: "install missing packages"
+        run: apt-get install -y uuid-dev
       - name: "Build project"
+        env:
+          CLONE_TOKEN: ${{ secrets.CLONE_TOKEN }}
         run: ./build.sh test
       - name: "Copy files"
         run: |
@@ -42,6 +46,8 @@ jobs:
         run: ls -l ./
       - name: "update package-list"
         run: apt-get update
+      - name: "install missing packages"
+        run: apt-get install -y uuid-dev
       - name: Get artifact
         uses: actions/download-artifact@v3
         with:

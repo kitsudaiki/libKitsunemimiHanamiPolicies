@@ -53,14 +53,26 @@ function get_required_private_repo_github () {
     REPO_NAME=$1
     TAG_OR_BRANCH=$2
     NUMBER_OF_THREADS=$3
-    ADDITIONAL_CONFIGS=$4
 
     # clone repo
-    git clone https://kitsudaiki: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@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
+    git clone https://kitsudaiki:$CLONE_TOKEN@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
     cd "$PARENT_DIR/$REPO_NAME"
     git checkout $TAG_OR_BRANCH
 
-    build_kitsune_lib_repo $REPO_NAME $NUMBER_OF_THREADS $ADDITIONAL_CONFIGS
+    build_kitsune_lib_repo $REPO_NAME $NUMBER_OF_THREADS
+}
+
+function download_private_repo_github () {
+    REPO_NAME=$1
+    TAG_OR_BRANCH=$2
+
+    # clone repo
+    git clone https://kitsudaiki:$CLONE_TOKEN@github.com/kitsudaiki/$REPO_NAME.git "$BUILD_DIR/$REPO_NAME"
+    git clone https://kitsudaiki:$CLONE_TOKEN@github.com/kitsudaiki/$REPO_NAME.git "$PARENT_DIR/$REPO_NAME"
+    cd "$BUILD_DIR/$REPO_NAME"
+    git checkout $TAG_OR_BRANCH
+    cd "$PARENT_DIR/$REPO_NAME"
+    git checkout $TAG_OR_BRANCH
 }
 
 #-----------------------------------------------------------------------------------------------------------------
@@ -81,9 +93,9 @@ echo "##########################################################################
 #-----------------------------------------------------------------------------------------------------------------
 
 if [ $1 = "test" ]; then
-    build_kitsune_lib_repo "libKitsunemimiHanamiPolicies" 4 "staticlib run_tests"
+    build_kitsune_lib_repo "libKitsunemimiHanamiPolicies" 1 "staticlib run_tests"
 else
-    build_kitsune_lib_repo "libKitsunemimiHanamiPolicies" 4 "staticlib"
+    build_kitsune_lib_repo "libKitsunemimiHanamiPolicies" 1 "staticlib"
 fi
 
 #-----------------------------------------------------------------------------------------------------------------
